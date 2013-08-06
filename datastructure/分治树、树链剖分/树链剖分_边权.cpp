@@ -12,7 +12,7 @@ struct edge
 {
 	int v,w,next;
 }e[N<<1];
-int dep[N],sz[N],pnt[N],heavy[N],rev[N],num[N];
+int dep[N],sz[N],pnt[N],heavy[N],rev[N],num[N<<1];
 int poi;
 struct sgt
 {
