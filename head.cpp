@@ -44,6 +44,7 @@ struct point3
 {
 	double x,y,z;
 	int init(){return scanf("%lf%lf%lf",&x,&y,&z);}
+	void output(){printf("%lf %lf %lf",x,y,z);}
 	point3 operator + (point3 a)
 	{ point3 ret; ret.x=x+a.x; ret.y=y+a.y; ret.z=z+a.z; return ret; }
 	point3 operator - (point3 a)
@@ -54,7 +55,14 @@ struct point3
 		ret.x=y*a.z-z*a.y; ret.y=z*a.x-x*a.z; ret.z=x*a.y-y*a.x;
 		return ret;
 	}
+	point3 operator * (double b)
+	{
+		point3 ret;
+		ret.x=x*b; ret.y=y*b; ret.z=z*b;
+		return ret;
+	}
 	double operator ^ (point3 a){ return x*a.x+y*a.y+z*a.z;  }
+	double vlen(){ return sqrt(x*x+y*y+z*z); }
 };
 double xmult(point p0,point p1,point p2)
 { return (p1.x-p0.x)*(p2.y-p0.y)-(p1.y-p0.y)*(p2.x-p0.x); }
