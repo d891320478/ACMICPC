@@ -1,33 +1,45 @@
-class fastget {
+class Fastget {
 
-    public BufferedReader in;
-    public StringTokenizer st;
-    public static final PrintWriter out = new PrintWriter(System.out);
+	public BufferedReader in;
+	public StringTokenizer st;
+	public static final PrintWriter out = new PrintWriter(System.out);
 
-    public fastget() {
-        in = new BufferedReader(new InputStreamReader(System.in));
-    }
+	public Fastget() {
+		in = new BufferedReader(new InputStreamReader(System.in));
+	}
 
-    private String next() {
-        while (st == null || !st.hasMoreTokens()) {
-            try {
-                st = new StringTokenizer(in.readLine());
-            } catch (Exception e) {
-            }
-        }
-        return st.nextToken();
-    }
+	private String next() {
+		while (st == null || !st.hasMoreTokens()) {
+			try {
+				st = new StringTokenizer(in.readLine());
+			} catch (Exception e) {
+			}
+		}
+		return st.nextToken();
+	}
 
-    public int nextInt() {
-        return Integer.parseInt(next());
-    }
+	public Integer nextInt() {
+		String s = next();
+		if (s == null || s.isEmpty()) {
+			return null;
+		}
+		return Integer.parseInt(s);
+	}
 
-    public long nextLong() {
-        return Long.parseLong(next());
-    }
+	public Long nextLong() {
+		String s = next();
+		if (s == null || s.isEmpty()) {
+			return null;
+		}
+		return Long.parseLong(s);
+	}
 
-    public double nextDouble() {
-        return Double.parseDouble(next());
-    }
+	public Double nextDouble() {
+		String s = next();
+		if (s == null || s.isEmpty()) {
+			return null;
+		}
+		return Double.parseDouble(s);
+	}
 
 }
