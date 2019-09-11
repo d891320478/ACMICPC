@@ -1,6 +1,6 @@
 class TreapNode {
     int key, val;
-    int wht, sz;
+    int wht, sz, cnt;
     TreapNode[] ch;
     private static TreapNode LEAF = null;
     private static final Random RAND = new Random(System.currentTimeMillis());
@@ -13,6 +13,7 @@ class TreapNode {
         LEAF.ch = new TreapNode[2];
         LEAF.ch[0] = LEAF.ch[1] = LEAF;
         LEAF.sz = 0;
+        LEAF.cnt = 0;
         LEAF.key = -1;
         LEAF.val = -1;
         LEAF.wht = -2147483648;
@@ -27,7 +28,7 @@ class TreapNode {
         ch[0] = ch[1] = leaf();
         this.key = key;
         this.val = val;
-        this.sz = 1;
+        this.sz = this.cnt = 1;
         this.wht = RAND.nextInt(2147483647);
     }
 
@@ -46,6 +47,23 @@ class Treap {
         root = leaf;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        dfs(root, sb);
+        return sb.toString();
+    }
+
+    private void dfs(TreapNode rt, StringBuilder sb) {
+        if (rt == leaf) {
+            return;
+        }
+        sb.append(rt.key).append("[" + rt.sz + "]").append(" (");
+        dfs(rt.ch[0], sb);
+        sb.append(")(");
+        dfs(rt.ch[1], sb);
+        sb.append(" )");
+    }
+
     public void insert(int key, int val) {
         insert(root, key, val, null, 0);
     }
@@ -54,26 +72,19 @@ class Treap {
         remove(root, key, null, 0);
     }
 
-    public int find(int key) {
-        return find(root, key);
-    }
-
-    public int findLowerOrEqual(int key) {
-        TreapNode rlt = findLowerOrEqual(root, key);
-        return rlt == leaf ? -1 : rlt.key;
-    }
-
-    public int findUpperOrEqual(int key) {
-        TreapNode rlt = findUpperOrEqual(root, key);
-        return rlt == leaf ? -1 : rlt.key;
-    }
-
-    public int maxKey() {
-        TreapNode t = root;
-        while (t.ch[1] != leaf) {
-            t = t.ch[1];
+    public int getKey(int index) {
+        TreapNode rt = root;
+        while (rt != leaf) {
+            if (rt.sz - rt.ch[1].sz < index) {
+                index -= rt.sz - rt.ch[1].sz;
+                rt = rt.ch[1];
+            } else if (index > rt.ch[0].sz) {
+                return rt.key;
+            } else {
+                rt = rt.ch[0];
+            }
         }
-        return t.key;
+        return 0;
     }
 
     public int size() {
@@ -91,6 +102,7 @@ class Treap {
             return;
         }
         if (key == x.key) {
+            ++x.cnt;
             x.val = val;
         } else {
             int son = key < x.key ? 0 : 1;
@@ -107,6 +119,11 @@ class Treap {
             return;
         }
         if (x.key == key) {
+            if (x.cnt > 1) {
+                --x.cnt;
+                update(x);
+                return;
+            }
             if (x.ch[0] == leaf && x.ch[1] == leaf) {
                 if (px == null) {
                     root = leaf;
@@ -125,54 +142,8 @@ class Treap {
         update(x);
     }
 
-    private int find(TreapNode x, int key) {
-        if (x == leaf) {
-            return -1;
-        }
-        if (x.key == key) {
-            return x.val;
-        }
-        return find(x.ch[key < x.key ? 0 : 1], key);
-    }
-
-    private TreapNode findLowerOrEqual(TreapNode x, int key) {
-        if (x == leaf) {
-            return leaf;
-        }
-        if (x.key == key) {
-            return x;
-        }
-        if (x.key > key) {
-            return findLowerOrEqual(x.ch[0], key);
-        }
-        TreapNode lv = findLowerOrEqual(x.ch[1], key);
-        if (lv == leaf || lv.key > key) {
-            return x;
-        } else {
-            return lv;
-        }
-    }
-
-    private TreapNode findUpperOrEqual(TreapNode x, int key) {
-        if (x == leaf) {
-            return leaf;
-        }
-        if (x.key == key) {
-            return x;
-        }
-        if (x.key < key) {
-            return findUpperOrEqual(x.ch[1], key);
-        }
-        TreapNode lv = findUpperOrEqual(x.ch[0], key);
-        if (lv == leaf || lv.key < key) {
-            return x;
-        } else {
-            return lv;
-        }
-    }
-
     private void update(TreapNode t) {
-        t.sz = 1 + t.ch[0].sz + t.ch[1].sz;
+        t.sz = t.cnt + t.ch[0].sz + t.ch[1].sz;
     }
 
     private void rotate(TreapNode x, int t, TreapNode px, int pt) {
