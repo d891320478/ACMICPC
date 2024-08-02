@@ -55,36 +55,6 @@ public class UnrolledLinkedList {
         }
     }
 
-    public int count(int l, int r, int k) {
-        ListNode next = head;
-        while (next != null && next.size <= l) {
-            l -= next.size;
-            r -= next.size;
-            next = next.next;
-        }
-        if (next == null) {
-            return 0;
-        }
-        int cnt = 0;
-        for (int i = l; i <= Math.min(r, next.size - 1); ++i) {
-            if (k == next.list[i]) {
-                ++cnt;
-            }
-        }
-        r -= next.size;
-        next = next.next;
-        while (next != null && r >= next.size) {
-            r -= next.size;
-            next = next.next;
-        }
-        for (int i = 0; i <= r; ++i) {
-            if (k == next.list[i]) {
-                ++cnt;
-            }
-        }
-        return cnt;
-    }
-
     private static class ListNode {
         private ListNode pre, next;
         private int[] list;
