@@ -8,3 +8,9 @@ int dfs(int i)
   		}
     return 0;
 }
+
+for(int i=1;i<=sa;i++)
+	{
+		memset(u,0,sizeof(u));
+		if(dfs(i))va++;
+	}
